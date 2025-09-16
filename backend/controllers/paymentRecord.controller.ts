@@ -83,3 +83,21 @@ export const addPayments = async (req: Request, res: Response) => {
   }
 }
 
+export const getPendingAmount = async (req: Request, res: Response) => {
+  try {
+    const { FMID } = req.body;
+    if (!FMID) {
+      return res.status(400).json({ error: 'Missing required field' });
+    }
+    const fm = await prisma.fM.findUnique({
+      where: { FMID },
+    });
+    if (!fm) {
+      return res.status(404).json({ error: 'FMID not found' });
+    }
+    return res.status(200).json({ pendingAmount: fm.pendingAmount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}

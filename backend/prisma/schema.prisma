@@ -16,11 +16,6 @@ model FM {
   paymentRecords PaymentRecord[]
 }
 
-model Bill {
-  id String @id @map("_id") @default(auto()) @db.ObjectId
-  IDNumber String
-  paymentRecords PaymentRecord[]
-}
 
 model PaymentRecord {
   id String @id @map("_id") @default(auto()) @db.ObjectId
@@ -35,6 +30,4 @@ model PaymentRecord {
   remarks String
   FM FM? @relation(fields: [FMID], references: [id], onDelete: Cascade)
   FMID String? @db.ObjectId
-  Bill Bill? @relation(fields: [billId], references: [id], onDelete: Cascade)
-  billId String? @db.ObjectId
 }

@@ -19,6 +19,7 @@ const Payment = () => {
   const [totalAmount, setTotalAmount] = useState("");
   const [results, setResults] = useState<Result[]>([]);
   const [warning, setWarning] = useState<string | null>(null);
+  const [pendingAmount, setPendingAmount] = useState<number | null>(null);
 
   const parseAmounts = () => {
     return amountInput
@@ -74,6 +75,21 @@ const Payment = () => {
     }
   };
 
+  const getPendingAmount = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/payment-records/pending-amount",
+        {
+          FMID: fmidInput,
+        }
+      );
+      setPendingAmount(res.data.pendingAmount);
+    } catch (error) {
+      console.error(error);
+      alert("Error getting pending amount");
+    }
+  };
+
   const remainingAmount = getRemainingAmount();
 
   return (
@@ -103,6 +119,25 @@ const Payment = () => {
             className="border p-2 w-full"
             required
           />
+        </div>
+        <div className="">
+          <div>
+            <label className="block mb-1 font-medium">Pending Amount</label>
+            <input
+              type="number"
+              value={pendingAmount ?? ""}
+              readOnly
+              placeholder="Pending amount will be shown here"
+              className="border p-2 w-full bg-gray-100"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={getPendingAmount}
+            className="bg-blue-500 text-white h-10 rounded w-full hover:bg-blue-600 mt-5"
+          >
+            Get Pending Amount
+          </button>
         </div>
         <div>
           <label className="block mb-1 font-medium">Amounts (comma separated)</label>
